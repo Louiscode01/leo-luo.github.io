@@ -1,0 +1,130 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<!-- Set language to English for accessibility -->
+<head>
+  <meta charset="UTF-8">
+  <!-- Ensures proper character encoding -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Makes the site responsive for mobile devices -->
+  <title>Haorui (Leo) Luo - Future Physical Therapist</title>
+  <!-- Page title shown in browser tab -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Loads Tailwind CSS from CDN for styling -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <!-- Favicon (small icon in browser tab); replace 'favicon.png' with your own 16x16 or 32x32 PNG -->
+  <style>
+    /* Custom CSS for smooth scrolling and hover effects */
+    html { scroll-behavior: smooth; }
+    /* Enables smooth scrolling for navigation links */
+    .hover-scale { transition: transform 0.3s ease; }
+    /* Smooth scaling for hover effects */
+    .hover-scale:hover { transform: scale(1.05); }
+    /* Scales elements slightly on hover */
+    .transition-border { transition: all 0.3s ease; }
+    /* Smooth transitions for borders and colors */
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Main body with light gray background and sans-serif font -->
+  <!-- Navigation Bar -->
+  <nav class="bg-blue-900 text-white p-4 sticky top-0 shadow-md">
+    <!-- Navy blue nav bar, sticky to stay at top -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center">
+      <!-- Responsive padding and flex layout for mobile -->
+      <div class="text-xl font-bold mb-2 sm:mb-0">Haorui (Leo) Luo</div>
+      <!-- Name/logo; edit to change display name -->
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+        <!-- Navigation links; stacks vertically on mobile -->
+        <!-- Edit href to point to new pages or remove 'birthday.html' to delete Birthday page -->
+        <!-- For a hamburger menu on mobile, add JavaScript and toggle classes (e.g., hidden, block) -->
+        <a href="index.html" class="hover:text-blue-200 transition-border">Home</a>
+        <a href="about.html" class="hover:text-blue-200 transition-border">About</a>
+        <a href="experience.html" class="hover:text-blue-200 transition-border">Experience</a>
+        <a href="shadowing.html" class="hover:text-blue-200 transition-border">Shadowing</a>
+        <a href="contact.html" class="hover:text-blue-200 transition-border">Contact</a>
+        <a href="birthday.html" class="hover:text-yellow-300 transition-border">Birthday Gift</a>
+        <!-- Yellow hover for Birthday link to stand out -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="bg-blue-500 text-white py-16 sm:py-20">
+    <!-- Lighter blue hero section with responsive padding -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl text-center border border-gray-200 rounded-lg shadow-md p-6 sm:p-8 transition-border">
+      <!-- Centered content with faded border and increased padding -->
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4 hover-scale">Welcome to Leo's Journey</h1>
+      <!-- Responsive heading; edit text to change welcome message -->
+      <p class="text-base sm:text-lg mb-4">Haorui (Leo) Luo | Doctor of Physical Therapy Student</p>
+      <!-- Responsive subtitle; edit to update title or description -->
+      <img src="hero-image.jpg" alt="Placeholder for hero image" class="w-full max-w-xs sm:max-w-sm rounded-full mx-auto my-4 object-cover">
+      <!-- Responsive image; replace 'hero-image.jpg' with your image (~800x400px, <500KB) -->
+    </div>
+  </section>
+
+  <!-- Introduction Section -->
+  <section class="py-12 sm:py-16 bg-white">
+    <!-- White background for contrast -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl text-center border border-gray-200 rounded-lg shadow-md p-6 sm:p-8 transition-border">
+      <!-- Centered content with faded border and increased padding -->
+      <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-blue-900">About Leo</h2>
+      <!-- Navy blue heading; edit text to change -->
+      <p class="text-base sm:text-lg text-gray-700 mb-4">
+        <!-- Edit this paragraph to update intro text -->
+        Haorui (Leo) Luo is a dedicated DPT student at Carlow University, passionate about improving lives through physical therapy. 
+        Explore his experience and global perspective in rehabilitation.
+      </p>
+      <a href="about.html" class="inline-block mt-4 bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 hover-scale transition-border min-w-[120px]">Learn More</a>
+      <!-- Responsive button with padding; edit href or text as needed -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-white py-4">
+    <!-- Navy blue footer -->
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p>© 2025 Haorui (Leo) Luo. All rights reserved.</p>
+      <!-- Edit year or text as needed -->
+    </div>
+  </footer>
+</body>
+</html>
